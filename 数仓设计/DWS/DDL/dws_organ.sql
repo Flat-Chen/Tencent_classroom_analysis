@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS txkt.dws_organ
 (
-  `organ_name`                   STRING COMMENT '视频ID',
+  `organ_name`                   STRING COMMENT '机构名称',
      
   `charge_video_num`             BIGINT COMMENT '机构收费视频数',
   `free_video_num`               BIGINT COMMENT '机构免费视频数',
