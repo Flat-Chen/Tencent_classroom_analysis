@@ -3,6 +3,7 @@ import pymysql
 import pandas as pd
 from sqlalchemy import create_engine
 import time
+from urllib import parse
 
 today = time.strftime("%Y_%m_%d", time.localtime())
 
@@ -13,7 +14,7 @@ class TencentKeSpiderPipeline:
         return cls(crawler.settings)
 
     def __init__(self, settings):
-        self.conn = create_engine('mysql+pymysql://txkt:jKmnGWj6szmDa8hw@101.35.21.127:3306/txkt?charset=utf8mb4')
+        self.conn = create_engine('mysql+pymysql://root:{}@node01:3306/txkt?charset=utf8mb4'.format(parse.quote("@WSX3edc")))
         self.mysqlcounts = 0
         ddl = '''
 CREATE TABLE IF NOT EXISTS tencent_study_video_spider_{}
@@ -41,9 +42,9 @@ CREATE TABLE IF NOT EXISTS tencent_study_video_spider_{}
   DEFAULT CHARSET = utf8;
 '''.format(today)
         db = pymysql.connect(
-            host='101.35.21.127',
-            user='txkt',
-            password='jKmnGWj6szmDa8hw',
+            host='node01',
+            user='root',
+            password='@WSX3edc',
             database='txkt'
         )
         cursor = db.cursor()
@@ -61,6 +62,4 @@ CREATE TABLE IF NOT EXISTS tencent_study_video_spider_{}
         df = pd.DataFrame(items)
         df.to_sql(name='tencent_study_video_spider_{}'.format(today), con=self.conn, if_exists="append", index=False)
         logging.log(msg=f"add data in mysql", level=logging.INFO)
-
-    def close_spider(self, spider):
-        self.conn.close()
+        return item

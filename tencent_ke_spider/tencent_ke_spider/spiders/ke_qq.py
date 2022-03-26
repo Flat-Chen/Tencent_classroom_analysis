@@ -98,5 +98,5 @@ class KeQqSpider(scrapy.Spider):
         item['organ_video_num'] = organ[1].xpath('./span/@data-num').extract_first().strip()
         item['organ_all_person_num'] = organ[2].xpath('./span/@data-num').extract_first().strip()
         item['grab_time'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        # yield item
-        print(item)
+        yield item
+        # print(item)
