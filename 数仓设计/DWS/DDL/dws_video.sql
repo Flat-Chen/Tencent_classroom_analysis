@@ -1,4 +1,5 @@
 CREATE TABLE IF NOT EXISTS txkt.dws_video
+(
   `video_id`             STRING COMMENT '视频ID',
   `video_title`          STRING COMMENT '视频标题',
 
