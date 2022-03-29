@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS txkt.dws_organ
   `organ_all_person_num`         BIGINT COMMENT '机构累计学习人数',
   `organ_all_charge_person_num`  BIGINT COMMENT '机构视频购买总人数',
    
-  `max_stduy_video`              STRING COMMENT '机构学习人数最多视频',
+  `max_study_video`              STRING COMMENT '机构学习人数最多视频',
    
   `avg_page`                     BIGINT COMMENT '机构课程平均所在页数',
  

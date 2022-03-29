@@ -5,7 +5,7 @@
           cheap_video_price,
           all_person_num,
           all_charge_person_num,
-          max_stduy_video,
+          max_study_video,
           add_study_num_1d,
           add_study_num_3d,
           add_study_num_10d,
@@ -31,7 +31,7 @@
                    MAX(CASE WHEN price > 0 THEN price ELSE NULL END)                        AS cheap_video_price,
                    SUM(today.person_num)                                                    AS all_person_num,
                    SUM(CASE WHEN price > 0 THEN today.person_num ELSE 0 END)                AS all_charge_person_num,
-                   MAX(CASE WHEN stduy_video_rank = 1 THEN today.video_id ELSE NULL END)    AS max_stduy_video,
+                   MAX(CASE WHEN study_video_rank = 1 THEN today.video_id ELSE NULL END)    AS max_study_video,
                    SUM((NVL(today.recently_study_num, 0) -  NVL(d1.recently_study_num, 0))) AS add_study_num_1d,
                    SUM((NVL(today.recently_study_num, 0) -  NVL(d3.recently_study_num, 0))) AS add_study_num_3d,
                    SUM((NVL(today.recently_study_num, 0) - NVL(d10.recently_study_num, 0))) AS add_study_num_10d,
@@ -49,7 +49,7 @@
                              price,
                              video_type1,
                              video_index_page,
-                             ROW_NUMBER() OVER(PARTITION BY video_type1 ORDER BY person_num DESC) AS stduy_video_rank
+                             ROW_NUMBER() OVER(PARTITION BY video_type1 ORDER BY person_num DESC) AS study_video_rank
                         FROM txkt.dim_video_df
                        WHERE dt = '{dt}'
                    ) AS today

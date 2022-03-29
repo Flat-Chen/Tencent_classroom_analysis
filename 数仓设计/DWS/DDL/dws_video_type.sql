@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS txkt.dws_video_type
   `all_person_num`               BIGINT COMMENT '累计学习人数',
   `all_charge_person_num`        BIGINT COMMENT '视频购买总人数',
    
-  `max_stduy_video`              STRING COMMENT '学习人数最多视频',
+  `max_study_video`              STRING COMMENT '学习人数最多视频',
    
   `add_study_num_1d`             BIGINT COMMENT '近一天增加学习人数',
   `add_study_num_3d`             BIGINT COMMENT '近三天增加学习人数',

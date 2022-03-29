@@ -5,7 +5,7 @@
           cheap_video_price,
           organ_all_person_num,
           organ_all_charge_person_num,
-          max_stduy_video,
+          max_study_video,
           avg_page,
           add_study_num_1d,
           add_study_num_3d,
@@ -37,7 +37,7 @@ LEFT JOIN (
                    MAX(price)                                                               AS expensive_video_price,
                    MAX(CASE WHEN price > 0 THEN price ELSE NULL END)                        AS cheap_video_price,
                    SUM(CASE WHEN price > 0 THEN today.person_num ELSE 0 END)                AS organ_all_charge_person_num,
-                   MAX(CASE WHEN stduy_video_rank = 1 THEN today.video_id ELSE NULL END)          AS max_stduy_video,
+                   MAX(CASE WHEN study_video_rank = 1 THEN today.video_id ELSE NULL END)          AS max_study_video,
                    AVG(video_index_page)                                                    AS avg_page,
                    SUM((NVL(today.recently_study_num, 0) -  NVL(d1.recently_study_num, 0))) AS add_study_num_1d,
                    SUM((NVL(today.recently_study_num, 0) -  NVL(d3.recently_study_num, 0))) AS add_study_num_3d,
@@ -56,7 +56,7 @@ LEFT JOIN (
                              price,
                              organ_name,
                              video_index_page,
-                             ROW_NUMBER() OVER(PARTITION BY organ_name ORDER BY person_num DESC) AS stduy_video_rank
+                             ROW_NUMBER() OVER(PARTITION BY organ_name ORDER BY person_num DESC) AS study_video_rank
                         FROM txkt.dim_video_df
                        WHERE dt = '{dt}'
                    ) AS today
