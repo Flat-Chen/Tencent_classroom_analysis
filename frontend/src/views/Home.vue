@@ -12,35 +12,52 @@
     </div>
     <!-- 视频统计 -->
     <div class="echart-item" v-if="currentCode == 'video'">
-      <echarts
+      <!-- <bar-echarts
         id="one"
         title="课程近十天增加学习人数"
         :yAxis="videoLearnPerson.yAxis"
         :series="videoLearnPerson.series"
+      /> -->
+      <line-echarts
+        id="one"
+        title="课程近十天增加学习人数"
+        :xAxis="videoLearnPerson.yAxis"
+        :series="videoLearnPerson.series"
       />
-      <echarts
+      <bar-echarts
         id="two"
         title="课程近十天增加购买/报名人数"
-        :yAxis="videoBuyPerson.yAxis"
         :series="videoBuyPerson.series"
       />
     </div>
 
     <!-- 机构统计 -->
     <div class="echart-item" v-if="currentCode == 'org'">
-      <echarts
+      <!-- <bar-echarts
+        id="three"
+        title="机构学习人数最多视频"
+        :yAxis="orgMostLearnPerson.yAxis"
+        :series="orgMostLearnPerson.series"
+      /> -->
+      <pie-echarts
         id="three"
         title="机构学习人数最多视频"
         :yAxis="orgMostLearnPerson.yAxis"
         :series="orgMostLearnPerson.series"
       />
-      <echarts
+      <!-- <bar-echarts
         id="four"
         title="机构课程平均所在页数"
         :yAxis="orgVideoPage.yAxis"
         :series="orgVideoPage.series"
+      /> -->
+      <line-echarts
+        id="four"
+        title="机构课程平均所在页数"
+        :xAxis="orgVideoPage.yAxis"
+        :series="orgVideoPage.series"
       />
-      <echarts
+      <bar-echarts
         id="five"
         title="机构近十天增加购买/报名人数最多的视频"
         :yAxis="orgCurrentMostByVideo.yAxis"
@@ -50,22 +67,33 @@
 
     <!-- 视频分类统计 -->
     <div class="echart-item" v-if="currentCode == 'videoType'">
-      <echarts
+      <!-- <bar-echarts
         id="six"
         title="累计免费视频学习人数最多的分类"
         :yAxis="videoTypeTotalLearnPerson.yAxis"
         :series="videoTypeTotalLearnPerson.series"
+      /> -->
+      <pie-echarts
+        id="six"
+        title="累计免费视频学习人数最多的分类"
+        :series="videoTypeTotalLearnPerson.series"
       />
-      <echarts
+      <bar-echarts
         id="seven"
         title="近十天免费视频学习人数最多的分类"
         :yAxis="videoTypeCurrentFreeLearnPerson.yAxis"
         :series="videoTypeCurrentFreeLearnPerson.series"
       />
-      <echarts
+      <!-- <bar-echarts
         id="eight"
         title="近十天（免费 + 收费）视频学习人数最多的分类"
         :yAxis="videoTypeCurrentFreeAndChargeLearnPerson.yAxis"
+        :series="videoTypeCurrentFreeAndChargeLearnPerson.series"
+      /> -->
+      <line-echarts
+        id="eight"
+        title="近十天（免费 + 收费）视频学习人数最多的分类"
+        :xAxis="videoTypeCurrentFreeAndChargeLearnPerson.yAxis"
         :series="videoTypeCurrentFreeAndChargeLearnPerson.series"
       />
     </div>
@@ -73,13 +101,17 @@
 </template>
 
 <script>
-import Echarts from "@/components/echarts.vue";
+import BarEcharts from "@/components/barEcharts.vue";
+import LineEcharts from "@/components/lineEcharts.vue";
+import PieEcharts from "@/components/pieEcharts.vue";
 
 import { getVideoData, getOrgData, getVideoTypeData } from "@/request/api.js";
 export default {
   name: "Home",
   components: {
-    Echarts,
+    BarEcharts,
+    LineEcharts,
+    PieEcharts,
   },
   data() {
     return {
@@ -111,7 +143,6 @@ export default {
 
       // 机构数据
       orgMostLearnPerson: {
-        yAxis: [],
         series: [],
       }, // 机构学习人数最多视频
       orgVideoPage: {
@@ -124,7 +155,7 @@ export default {
       }, // 机构近十天增加购买/报名人数最多的视频
 
       // 视频分类
-      videoTypeTotalLearnPerson: { yAxis: [], series: [] }, // 累计免费视频学习人数最多的分类前十排行
+      videoTypeTotalLearnPerson: { series: [] }, // 累计免费视频学习人数最多的分类前十排行
       videoTypeCurrentFreeLearnPerson: { yAxis: [], series: [] }, // 近十天免费视频学习人数最多的分类前十排行
       videoTypeCurrentFreeAndChargeLearnPerson: { yAxis: [], series: [] }, // 近十天（免费 + 收费）视频学习人数最多的分类前十排行
     };
@@ -165,12 +196,16 @@ export default {
       getOrgData().then((res) => {
         const { max_study_video, avg_page, add_person_num_10d_max_video } = res;
         // 机构学习人数最多视频
-        this.orgMostLearnPerson.yAxis = max_study_video?.map(
-          (item) => item.name
-        );
-        this.orgMostLearnPerson.series = max_study_video?.map(
-          (item) => item.value
-        );
+        // this.orgMostLearnPerson.yAxis = max_study_video?.map(
+        //   (item) => item.name
+        // );
+        // this.orgMostLearnPerson.series = max_study_video?.map(
+        //   (item) => item.value
+        // );
+        this.orgMostLearnPerson.series = max_study_video?.map((item) => ({
+          value: item.value,
+          name: item.name,
+        }));
 
         // 机构课程平均所在页数
         this.orgVideoPage.yAxis = avg_page?.map((item) => item.name);
@@ -193,11 +228,14 @@ export default {
           add_person_num_10d_max_video,
         } = res;
         // 累计免费视频学习人数最多的分类前十排行
-        this.videoTypeTotalLearnPerson.yAxis = max_study_video?.map(
-          (item) => item.name
-        );
+        // this.videoTypeTotalLearnPerson.yAxis = max_study_video?.map(
+        //   (item) => item.name
+        // );
+        // this.videoTypeTotalLearnPerson.series = max_study_video?.map(
+        //   (item) => item.value
+        // );
         this.videoTypeTotalLearnPerson.series = max_study_video?.map(
-          (item) => item.value
+          (item) => ({ value: item.value, name: item.name })
         );
         // 近十天免费视频学习人数最多的分类前十排行
         this.videoTypeCurrentFreeLearnPerson.yAxis = add_study_num_10d?.map(
